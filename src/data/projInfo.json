@@ -1,15 +1,15 @@
 {
 	"$schema": "./projInfo-schema.json",
 
-	"title": "Delooped",
-	"description": "A project made in Profectus",
-	"id": "delooped",
-	"author": "ducdat0507",
+	"title": "Relooped",
+	"description": "A mod of delooped by ducdat0507",
+	"id": "relooped",
+	"author": "Mae Moon",
 	"discordName": "",
 	"discordLink": "",
 
-	"versionNumber": "0.5",
-	"versionTitle": "The Last Update (for now)",
+	"versionNumber": "0.6",
+	"versionTitle": "Relooped",
 
 	"allowGoBack": true,
 	"defaultShowSmall": false,

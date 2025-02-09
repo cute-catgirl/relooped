@@ -5,6 +5,12 @@
         </template>
         <template v-slot:body>
             <details open>
+                <summary>v0.6 Relooped - <time>2025-02-08</time></summary>
+                <ul>
+                    <li class="feature">Added more meta upgrades</li>
+                </ul>
+            </details>
+            <details open>
                 <summary>v0.5 The Last Update (for now) - <time>2023-05-29</time></summary>
                 <ul>
                     <li class="feature">Added new buildings</li>
