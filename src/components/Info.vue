@@ -1,7 +1,7 @@
 <template>
     <Modal v-model="isOpen">
         <template v-slot:header>
-            <h1 class="result-title">DELOOPED</h1>
+            <h1 class="result-title">RELOOPED</h1>
             <h2 style="font-style: italic;">
                 - {{ versionTitle }} -
             </h2>

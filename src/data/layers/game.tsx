@@ -173,10 +173,13 @@ const layer = createLayer(id, function (this: BaseLayer) {
         cycleProgress.value = 0;
         resources.energy.value = Decimal.mul(main.upgrades.startEnergy.amount.value, 25)
             .add(main.getCapsuleEffect("energy")).add(100).toNumber();
-        resources.info.value = 0;
+        resources.info.value = Decimal.mul(main.upgrades.startInfo.amount.value, 50)
+            .toNumber();
         nextTick(() => {
-            resourcesTotal.energy.value = resourcesTotal.info.value = 0;
+            resourcesTotal.energy.value = 0;
+            resourcesTotal.info.value = resources.info.value;
         })
+        console.log(resources.info.value);
         buildingFactor.value = 0;
         buildingFactors.value = {};
         lifetime.value = 0;

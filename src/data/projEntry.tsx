@@ -65,7 +65,7 @@ export let gameModeArray = ["standard", "boosted", "hardcore"];
  * @hidden
  */
 export const main = createLayer("main", function (this: BaseLayer) {
-    const points = createResource<number>(0, "xp");
+    const points = createResource<number>(300, "xp");
     const total = trackTotal(points);
     
     const capsules = createResource<number>(0, "💊");
@@ -222,13 +222,27 @@ export const main = createLayer("main", function (this: BaseLayer) {
             })),
             style: { width: "225px", padding: "0 10px" },
         })),
+        startInfo: createRepeatable(self => ({
+            display: {
+                title: "Head Start",
+                description: "Increase the starting Information budget by 50.",
+                effectDisplay: jsx(() => <>{formatWhole(Decimal.mul(self.amount.value, 50))}</>),
+                showAmount: false,
+            },
+            visibility: noPersist(computed(() => unlockedBuildings.value["observer"] == true)),
+            requirements: createCostRequirement(() => ({
+                resource: noPersist(points),
+                cost: Formula.variable(self.amount).pow_base(1.5).mul(400),
+            })),
+            style: { width: "225px", padding: "0 10px" },
+        })),
     } as Record<string, GenericRepeatable>;
     
     let buildingUpgrades: { [key: string]: { [key: string]: GenericUpgrade } } = {
         beamer: {
             cost: createUpgrade(self => ({
                 display: {
-                    title: "Cost",
+                    title: "Cheaper Beamer",
                     description: "Decrease the base cost by 5",
                 },
                 requirements: createCostRequirement(() => ({
