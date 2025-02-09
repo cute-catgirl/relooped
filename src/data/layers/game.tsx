@@ -80,6 +80,15 @@ const layer = createLayer(id, function (this: BaseLayer) {
         return 1.1 ** (buildingFactor.value + (buildingFactors.value[building] ?? 0));
     }
 
+    function getBuildingCostReduction(building: string) {
+        if (building === "beamer") {
+            if (main.buildingUpgrades.beamer.cost.bought.value == true) {
+                return 5;
+            }
+        }
+        return 0;
+    }
+
     const gameState = persistent<string>("", false);
     const gameSpeed = persistent<number>(0);
     const gamePaused = ref<boolean>(false);
@@ -554,7 +563,7 @@ const layer = createLayer(id, function (this: BaseLayer) {
                                 sellValue: {},
                             }
                             for (let [id, cost] of Object.entries(buildings[selectedBuilding.value].baseCost)) {
-                                let realCost = cost * getBuildingCostFactor(selectedBuilding.value);
+                                let realCost = (cost - getBuildingCostReduction(selectedBuilding.value)) * getBuildingCostFactor(selectedBuilding.value);
                                 resources[id].value -= realCost;
                                 loop.building.sellValue[id] = realCost * 0.75;
                             }
@@ -813,8 +822,9 @@ const layer = createLayer(id, function (this: BaseLayer) {
     function canAffordBuilding(id: string) {
         if (!buildings[id]) return false;
         let costFactor = getBuildingCostFactor(id);
+        let costReduction = getBuildingCostReduction(id);
         for (let [rid, cost] of Object.entries(buildings[id].baseCost)) {
-            if (resources[rid].value < cost * costFactor) return false;
+            if (resources[rid].value < (cost - costReduction) * costFactor) return false;
         }
         return true;
     }
@@ -860,6 +870,7 @@ const layer = createLayer(id, function (this: BaseLayer) {
     function buildingItemMouseEnter(e: MouseEvent, building: BuildingType, id: string) {
         tooltipTimeout = setTimeout(() => {
             let costFactor = getBuildingCostFactor(id);
+            let costReduction = getBuildingCostReduction(id);
             showTooltip(<>
                 <h3>{building.name}</h3>{" "}
                 <h5 style="display: inline-block; margin: 0"><i>- {building.class.toUpperCase()}</i></h5>
@@ -871,7 +882,7 @@ const layer = createLayer(id, function (this: BaseLayer) {
                     {Object.entries(building.baseCost).map(([id, cost]) => 
                         <div class={{red: resources[id].value < cost * costFactor}}>
                             <div class="name">{resources[id].displayName}</div>
-                            <div class="value">{formatWhole(cost * costFactor)}</div>
+                            <div class="value">{formatWhole((cost - costReduction) * costFactor)}</div>
                         </div>
                     )}  
                 </div>

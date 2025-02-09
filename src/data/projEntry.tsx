@@ -224,6 +224,20 @@ export const main = createLayer("main", function (this: BaseLayer) {
         })),
     } as Record<string, GenericRepeatable>;
     
+    let buildingUpgrades: { [key: string]: { [key: string]: GenericUpgrade } } = {
+        beamer: {
+            cost: createUpgrade(self => ({
+                display: {
+                    title: "Cost",
+                    description: "Decrease the base cost by 5",
+                },
+                requirements: createCostRequirement(() => ({
+                    resource: noPersist(points),
+                    cost: 200
+                })),
+            }))
+        }
+    }
 
     const stats = {
         bestEnergy: trackBest(gameLayer.resourcesTotal.energy),
@@ -855,12 +869,20 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </div>
         };
         hubModalFooter.value = () => <>
-            {focusedBuilding.value ? <div style="display: flex; flex-direction: row; align-content: flex-start; gap: 10px; font-size: 12px; transition: none">
+            {focusedBuilding.value ? <div style="display: flex; flex-direction: row; align-content: flex-start; gap: 10px; font-size: 12px; transition: none; --layer-color: #afcfef">
                 <div style="flex: 0 0 calc(50% - 5px); margin: 0">
                     <h3>{buildings[focusedBuilding.value].name}</h3>{" "}
                     <h5 style="display: inline-block; margin: 0"><i>- {buildings[focusedBuilding.value].class.toUpperCase()}</i></h5>
                     <br />
                     <i>{buildings[focusedBuilding.value].description}</i>
+                    <br />
+                    {buildingUpgrades[focusedBuilding.value] ? <div>
+                    <button class="feature can" onClick={() => {
+                        showBuildingModal(focusedBuilding.value);
+                    }}>
+                        <h3>Enhancements</h3>
+                    </button>
+                    </div> : ""}
                 </div>
                 <div style="flex: 0 0 calc(50% - 5px); margin: 0">
                     <h5>BASE BUILDING COST:</h5>
@@ -1216,6 +1238,39 @@ export const main = createLayer("main", function (this: BaseLayer) {
         hubModalOpen.value = true;
     }
 
+    function showBuildingModal(id: string) {
+        let building = buildings[id];
+        hubModalHeader.value = () => <>
+            <h1 class="result-title">{building.name}</h1>
+            <h2 style="font-style: italic;">
+                - Enhance your building. -
+            </h2>
+        </>;
+        hubModalContent.value = () => {
+            return <div style="text-align: center; --layer-color: #afcfef">
+                You have <h2>{formatWhole(points.value)}</h2> xp.
+                <br/><br/>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center">
+                    {Object.values(buildingUpgrades[id]).map(render)}
+                </div>
+                </div>
+        };
+        hubModalFooter.value = (
+            <div style="display: flex; text-align: center; --layer-color: #dadafa">
+                <div style="flex-grow: 1" />
+                <button
+                    class="feature can"
+                    onClick={() => {
+                        showCollectionModal();
+                        focusedBuilding.value = id;
+                    }}
+                >
+                    Back
+                </button>
+            </div>
+        )
+    }
+
     let hubModalOpen = ref(false);
     let hubModalHeader = ref<Computable<JSX.Element | string>>("");
     let hubModalContent = ref<Computable<JSX.Element | string>>("");
@@ -1247,6 +1302,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
         board,
         unlocks,
         upgrades,
+        buildingUpgrades,
         objectives,
         allocatedCapsules,
 
