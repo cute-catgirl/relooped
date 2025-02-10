@@ -65,7 +65,7 @@ export let gameModeArray = ["standard", "boosted", "hardcore"];
  * @hidden
  */
 export const main = createLayer("main", function (this: BaseLayer) {
-    const points = createResource<number>(300, "xp");
+    const points = createResource<number>(0, "xp");
     const total = trackTotal(points);
     
     const capsules = createResource<number>(0, "💊");
@@ -838,7 +838,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </h2>
         </>;
         hubModalContent.value = () => {
-            let cost = 0
+            let cost = 20
             return !unlocks.collection.value ? <div style="text-align: center; --layer-color: #afcfef">
                 <button 
                     class={{
@@ -1013,7 +1013,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </div> : ""}
         </>;
         hubModalContent.value = () => {
-            let cost = 0
+            let cost = 50
             return !unlocks.objectives.value ? <div style="text-align: center; --layer-color: #afcfef">
                 <button 
                     class={{

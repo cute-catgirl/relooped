@@ -8,6 +8,7 @@
                 <summary>v0.6 Relooped - <time>2025-02-08</time></summary>
                 <ul>
                     <li class="feature">Added building enhancements</li>
+                    <li class="feature">Added a new upgrade</li>
                 </ul>
             </details>
             <details open>

@@ -11,13 +11,14 @@
         </template>
         <template v-slot:body="{ shown }">
             <div style="text-align: center" v-if="shown">
-                <div v-if="author">a game by {{ author }}</div>
+                <div v-if="author">by <a style="display: inline-block" href="https://maemoon.me" target="_blank">{{ author }}</a></div>
                 <br />
                 <div>
-                    Made for the
+                    A mod of
                     <a style="display: inline-block" href="https://itch.io/jam/profectus-creation-jam" target="_blank">
-                        Profectus Creation Jam
+                        Delooped
                     </a>
+                    by ducdat0507
                 </div>
                 <div style="font-size: smaller; opacity: .5">
                     (Profectus by thepaperpilot, with inspiration from Acameada and Jacorb)
