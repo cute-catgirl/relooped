@@ -222,6 +222,21 @@ export const main = createLayer("main", function (this: BaseLayer) {
             })),
             style: { width: "225px", padding: "0 10px" },
         })),
+        capsuleEffect: createRepeatable(self => ({
+            display: {
+                title: "Capsule Effect",
+                description: "Unlock a new capsule effect",
+                effectDisplay: jsx(() => <>+{formatWhole(self.amount.value)}</>),
+                showAmount: false
+            },
+            limit: 1,
+            visibility: noPersist(unlocks.capsules),
+            requirements: createCostRequirement(() => ({
+                resource: noPersist(points),
+                cost: Formula.variable(self.amount).pow_base(4).mul(1000)
+            })),
+            style: { width: "225px", padding: "0 10px" }
+        })),
         startInfo: createRepeatable(self => ({
             display: {
                 title: "Head Start",
@@ -229,6 +244,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 effectDisplay: jsx(() => <>{formatWhole(Decimal.mul(self.amount.value, 50))}</>),
                 showAmount: false,
             },
+            limit: 5,
             visibility: noPersist(computed(() => unlockedBuildings.value["observer"] == true)),
             requirements: createCostRequirement(() => ({
                 resource: noPersist(points),
@@ -427,6 +443,13 @@ export const main = createLayer("main", function (this: BaseLayer) {
             formula: (x) => Math.sqrt(x / 10),
             precision: 2,
         },
+        health: {
+            name: "Health Core",
+            description: "-{0}% enemy health.",
+            formula: (x) => Math.sqrt(x / 5),
+            precision: 2,
+            visibility: () => Decimal.gte(upgrades.capsuleEffect.amount.value, 1)
+        }
     } as Record<string, CapsuleUpgrade>;
 
     function getCapsuleEffect(id: string) {
@@ -838,7 +861,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </h2>
         </>;
         hubModalContent.value = () => {
-            let cost = 20
+            let cost = 0
             return !unlocks.collection.value ? <div style="text-align: center; --layer-color: #afcfef">
                 <button 
                     class={{
@@ -1013,7 +1036,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </div> : ""}
         </>;
         hubModalContent.value = () => {
-            let cost = 50
+            let cost = 0
             return !unlocks.objectives.value ? <div style="text-align: center; --layer-color: #afcfef">
                 <button 
                     class={{
@@ -1166,6 +1189,8 @@ export const main = createLayer("main", function (this: BaseLayer) {
             </h2>
         </>;
         hubModalContent.value = () => {
+            let unlockedUpgrades = capsuleUpgrades;
+
             let cost = 1;
             let interval = 900 / (100 + getCapsuleEffect("capsules")) / (100 + new Decimal(upgrades.capsuleGain.amount.value).toNumber()) * 10000;
             let capacity = 20 + getCapsuleEffect("capacity") + new Decimal(upgrades.capsuleCap.amount.value).toNumber();
@@ -1193,6 +1218,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 <hr/>
                 {
                     Object.entries(capsuleUpgrades).map(([id, upg]) => {
+                        if (upg.visibility && !upg.visibility()) return null;
                         let level = allocatedCapsules.value[id] ?? 0;
                         return <button class="feature" style="background: #afcfef; font-size: 10px; width: 240px; height: 100px;">
                             {formatWhole(level)} 💊<br/>
@@ -1208,7 +1234,9 @@ export const main = createLayer("main", function (this: BaseLayer) {
                     onClick={() => {
                         if (capsules.value >= 1) {
                             capsules.value -= 1;
-                            let list = Object.keys(capsuleUpgrades);
+                            let list = Object.entries(capsuleUpgrades)
+                                .filter(([_, upg]) => !upg.visibility || upg.visibility())
+                                .map(([id, _]) => id);
                             let sel = list[Math.floor(Math.random() * list.length)];
                             allocatedCapsules.value[sel] = (allocatedCapsules.value[sel] ?? 0) + 1;
                         }

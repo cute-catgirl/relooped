@@ -92,4 +92,5 @@ export type CapsuleUpgrade = {
     description: string;
     formula: (level: number) => number;
     precision?: number;
+    visibility?: () => boolean;
 }

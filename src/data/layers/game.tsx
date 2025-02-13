@@ -295,6 +295,9 @@ const layer = createLayer(id, function (this: BaseLayer) {
 
         for (let a = 0; a < count; a++) {
             let health = 18 * (1 + 0.05 * (cycle.value * enemyFactor) ** enemyFactor) * 1.02 ** cycle.value * (Math.random() * .2 + .9);
+            console.log("Initial:", health);
+            health *= (1 - main.getCapsuleEffect("health") / 100);
+            console.log("After capsules:", health)
             loopList[Math.floor(Math.random() * loopList.length)].enemies.push({
                 angle: Math.random(),
                 lifetime: 0,

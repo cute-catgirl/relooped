@@ -153,8 +153,7 @@ export const stunner = {
             self.data.time = ((self.data.time ?? 0) as number) + delta;
             if (self.data.prg >= 1) {
                 let enm = loop.enemies[Math.floor(Math.random() * loop.enemies.length)];
-                let dam = this.upgrades.damage.effect(self.upgrades.damage ?? 0) + 
-                    Math.log(self.data.time + 1) * this.upgrades.damage2.effect(self.upgrades.damage2 ?? 0);
+                let dam = this.upgrades.damage.effect(self.upgrades.damage ?? 0)
                 dealDamage(enm, dam * (inf.damage ?? 1));
                 if (Math.random() < this.upgrades.chance.effect(self.upgrades.chance ?? 0) / 100) {
                     enm.effects.stun = 0.0005;
