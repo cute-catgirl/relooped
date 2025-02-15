@@ -2,6 +2,8 @@ import { Shape } from "features/boards/board";
 import { BoardConnections, BoardID, BuildingType, Enemy } from "./data";
 import { dealDamage } from "./buildingHelper";
 import gameLayer from "data/layers/game";
+import { chooseUniqueElements } from "data/common";
+import { main } from "data/projEntry";
 
 export const beamer = {
     name: "Beamer",
@@ -27,10 +29,16 @@ export const beamer = {
         if (loop.enemies.length) {
             self.data.prg = ((self.data.prg ?? 0) as number) + delta / this.upgrades.interval.effect(self.upgrades.interval ?? 0) * (inf.speed ?? 1);
             if (self.data.prg >= 1) {
-                let enm = loop.enemies[Math.floor(Math.random() * loop.enemies.length)];
-                dealDamage(enm, this.upgrades.damage.effect(self.upgrades.damage ?? 0) * (inf.damage ?? 1));
-                if (!enm[BoardConnections]) enm[BoardConnections] = {};
-                enm[BoardConnections][loop[BoardID] ?? 0] = 0;
+                let amount = 1;
+                if (main.buildingUpgrades.beamer.double.bought.value == true) {
+                    amount += 1;
+                }
+                let enemiesToShoot = chooseUniqueElements(loop.enemies, Math.min(loop.enemies.length, amount));
+                enemiesToShoot.forEach(enm => {
+                    dealDamage(enm, this.upgrades.damage.effect(self.upgrades.damage ?? 0) * (inf.damage ?? 1));
+                    if (!enm[BoardConnections]) enm[BoardConnections] = {};
+                    enm[BoardConnections][loop[BoardID] ?? 0] = 0;
+                });;
                 self.data.prg--;
             }
         } else {

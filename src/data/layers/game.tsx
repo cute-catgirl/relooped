@@ -179,7 +179,6 @@ const layer = createLayer(id, function (this: BaseLayer) {
             resourcesTotal.energy.value = 0;
             resourcesTotal.info.value = resources.info.value;
         })
-        console.log(resources.info.value);
         buildingFactor.value = 0;
         buildingFactors.value = {};
         lifetime.value = 0;
@@ -295,9 +294,7 @@ const layer = createLayer(id, function (this: BaseLayer) {
 
         for (let a = 0; a < count; a++) {
             let health = 18 * (1 + 0.05 * (cycle.value * enemyFactor) ** enemyFactor) * 1.02 ** cycle.value * (Math.random() * .2 + .9);
-            console.log("Initial:", health);
             health *= (1 - main.getCapsuleEffect("health") / 100);
-            console.log("After capsules:", health)
             loopList[Math.floor(Math.random() * loopList.length)].enemies.push({
                 angle: Math.random(),
                 lifetime: 0,

@@ -224,7 +224,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
         })),
         capsuleEffect: createRepeatable(self => ({
             display: {
-                title: "Capsule Effect",
+                title: "Re-encapsulation",
                 description: "Unlock a new capsule effect",
                 effectDisplay: jsx(() => <>+{formatWhole(self.amount.value)}</>),
                 showAmount: false
@@ -265,6 +265,16 @@ export const main = createLayer("main", function (this: BaseLayer) {
                     resource: noPersist(points),
                     cost: 200
                 })),
+            })),
+            double: createUpgrade(self => ({
+                display: {
+                    title: "Double Up",
+                    description: "Allow the beamer to attack two enemies at once"
+                },
+                requirements: createCostRequirement(() => ({
+                    resource: noPersist(points),
+                    cost: 2000
+                }))
             }))
         }
     }
