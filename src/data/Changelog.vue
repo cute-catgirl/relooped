@@ -7,8 +7,9 @@
             <details open>
                 <summary>v0.6 Relooped (beta) - <time>2025-02-08</time></summary>
                 <ul>
-                    <li class="feature">Added two new upgrades</li>
+                    <li class="feature">Added two new research upgrades</li>
                     <li class="feature">Added building enhancements (WIP)</li>
+                    <li class="fix">Fixed a crash from the original game lol</li>
                 </ul>
             </details>
             <details open>
