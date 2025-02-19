@@ -148,7 +148,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.3).mul(200).sub(200),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         maxBuildings: createRepeatable(self => ({
             display: {
@@ -162,7 +162,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.6).mul(300),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         speedManip: createRepeatable(self => ({
             display: {
@@ -178,7 +178,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(3).mul(200),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         sellCooldown: createRepeatable(self => ({
             display: {
@@ -192,7 +192,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.4).mul(200),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         capsuleGain: createRepeatable(self => ({
             display: {
@@ -206,7 +206,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.3).mul(175),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         capsuleCap: createRepeatable(self => ({
             display: {
@@ -220,7 +220,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.6).mul(200),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
         capsuleEffect: createRepeatable(self => ({
             display: {
@@ -235,7 +235,7 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(4).mul(1000)
             })),
-            style: { width: "225px", padding: "0 10px" }
+            style: { width: "180px", padding: "0 10px" }
         })),
         startInfo: createRepeatable(self => ({
             display: {
@@ -250,8 +250,22 @@ export const main = createLayer("main", function (this: BaseLayer) {
                 resource: noPersist(points),
                 cost: Formula.variable(self.amount).pow_base(1.5).mul(400),
             })),
-            style: { width: "225px", padding: "0 10px" },
+            style: { width: "180px", padding: "0 10px" },
         })),
+        enemyDecrease: createRepeatable(self => ({
+            display: {
+                title: "Repellent",
+                description: "Decrease the amount of enemies per wave by 1.",
+                effectDisplay: jsx(() => <>-{formatWhole(self.amount.value)}</>),
+                showAmount: false,
+            },
+            limit: 3,
+            requirements: createCostRequirement(() => ({
+                resource: noPersist(points),
+                cost: Formula.variable(self.amount).pow_base(2.2).mul(800),
+            })),
+            style: { width: "180px", padding: "0 10px" },
+        }))
     } as Record<string, GenericRepeatable>;
     
     let buildingUpgrades: { [key: string]: { [key: string]: GenericUpgrade } } = {
@@ -1238,21 +1252,40 @@ export const main = createLayer("main", function (this: BaseLayer) {
                     })
                 }
                 <hr/>
-                <button 
-                    class={{feature: true, can: capsules.value >= 1}} 
-                    style="font-size: 12px; width: 240px; height: 50px;"
-                    onClick={() => {
-                        if (capsules.value >= 1) {
-                            capsules.value -= 1;
-                            let list = Object.entries(capsuleUpgrades)
-                                .filter(([_, upg]) => !upg.visibility || upg.visibility())
-                                .map(([id, _]) => id);
-                            let sel = list[Math.floor(Math.random() * list.length)];
-                            allocatedCapsules.value[sel] = (allocatedCapsules.value[sel] ?? 0) + 1;
-                        }
-                    }}>
-                    Open 1 💊
-                </button>
+                <div style="display: flex; gap: 10px; justify-content: center">
+                    <button 
+                        class={{feature: true, can: capsules.value >= 1}} 
+                        style="font-size: 12px; width: 115px; height: 50px;"
+                        onClick={() => {
+                            if (capsules.value >= 1) {
+                                capsules.value -= 1;
+                                let list = Object.entries(capsuleUpgrades)
+                                    .filter(([_, upg]) => !upg.visibility || upg.visibility())
+                                    .map(([id, _]) => id);
+                                let sel = list[Math.floor(Math.random() * list.length)];
+                                allocatedCapsules.value[sel] = (allocatedCapsules.value[sel] ?? 0) + 1;
+                            }
+                        }}>
+                        Open 1 💊
+                    </button>
+                    <button 
+                        class={{feature: true, can: capsules.value >= 10}} 
+                        style="font-size: 12px; width: 115px; height: 50px;"
+                        onClick={() => {
+                            if (capsules.value >= 10) {
+                                capsules.value -= 10;
+                                for (let i = 0; i < 10; i++) {
+                                    let list = Object.entries(capsuleUpgrades)
+                                        .filter(([_, upg]) => !upg.visibility || upg.visibility())
+                                        .map(([id, _]) => id);
+                                    let sel = list[Math.floor(Math.random() * list.length)];
+                                    allocatedCapsules.value[sel] = (allocatedCapsules.value[sel] ?? 0) + 1;
+                                }
+                            }
+                        }}>
+                        Open 10 💊
+                    </button>
+                </div>
                 <hr/><br/>
                 You have <h2>{format(amount, 2)} / {format(capacity, 2)}</h2> unclaimed 💊.<br/>
                 You gain 1 💊 every {formatTime(interval)}.<br/>

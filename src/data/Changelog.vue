@@ -5,7 +5,12 @@
         </template>
         <template v-slot:body>
             <details open>
-                <summary>v0.6 Relooped (beta) - <time>2025-02-08</time></summary>
+                <summary>v0.6.1 QoL Patch 1 - <time>2025-02-18</time></summary>
+                <ul>
+                    <li class="feature">Added the option to open 10 capsules at once</li>
+                    <li class="feature">Added a new research upgrade</li>
+                </ul>
+                <summary>v0.6 Relooped - <time>2025-02-08</time></summary>
                 <ul>
                     <li class="feature">Added two new research upgrades</li>
                     <li class="feature">Added building enhancements (WIP)</li>

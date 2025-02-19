@@ -276,6 +276,7 @@ const layer = createLayer(id, function (this: BaseLayer) {
 
         let count = 1 + (0.1 * cycle.value) + (0.01 * cycle.value * Math.min(cycle.value, 40));
         count = Math.floor(count) + (Math.random() < (count % 1) ? 1 : 0);
+        count = Math.max(1, count - Number(main.upgrades.enemyDecrease.amount.value));
         let loopList = Object.values(loops.value);
         if (loopList.length <= 0) return;
         
